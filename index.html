@@ -1,339 +1,140 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="es">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  background: #f2f2f2;
-  margin: 60px;
-  padding: 0;
-}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Check RP</title>
 
-h2 {
-  margin: 0;
-}
+  <!-- PWA meta -->
+  <meta name="theme-color" content="#000000" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="assets/icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Formulario" />
 
-/* --- Brand --- */
-.brand .toyota {
-  color: var(--accent, #ff5722);
-  font-weight: 700;
-}
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial;
+      text-align: center;
+      overflow: hidden;
+    }
 
-.brand small {
-  color: #0978C8;
-  font-weight: 500;
-}
+    .brand-container {
+      opacity: 1;
+      transition: opacity 1.5s ease; /* fade-out dura 1.5s */
+    }
 
-.brand-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 30px auto;
-  font-size: 1.5rem;
-  color: var(--muted, #666);
-  width: 100%;
-  gap: 10px;
-  padding: 0 10px;
+    .fade-out {
+      opacity: 0;
+    }
 
-  overflow-x: auto;
-  white-space: nowrap;
-  flex-wrap: nowrap;
-}
+    /* Branding */
+    .brand {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #EB0A1E;
+    }
 
-.brand-container > div {
-  margin: 0;
-}
+    .brand .location {
+      font-weight: 450;
+      color: #0978C8;
+      margin-left: 0.1rem;
+      font-size: 1.5rem;
+    }
 
-/* --- Input moderno --- */
-#instalador {
-  padding: 10px 15px;
-  font-size: 16px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-  outline: none;
-  transition: border-color 0.3s, box-shadow 0.3s;
-  width: 90%;
-  max-width: 300px;
-}
+    .opcion {
+      margin-top: 0.25rem;
+      font-size: 12px;
+      color: #ccc;
+      font-weight: 300;
+    }
 
-#instalador:focus {
-  border-color: #28a745;
-  box-shadow: 0 0 8px rgba(40,167,69,0.5);
-}
+    /* Barra de carga */
+    .progress-bar {
+      width: 80%;
+      height: 6px;
+      background: #333;
+      border-radius: 3px;
+      margin: 20px auto 0;
+      overflow: hidden;
+    }
 
-#instalador.error {
-  animation: shake 0.3s;
-  border-color: #dc3545;
-}
-
-@keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  50% { transform: translateX(5px); }
-  75% { transform: translateX(-5px); }
-  100% { transform: translateX(0); }
-}
-
-/* --- Mensajes --- */
-#mensaje {
-  margin: 10px;
-  padding: 8px;
-  display: none;
-  border-radius: 5px;
-  font-weight: bold;
-}
-
-.ok {
-  background-color: #d4edda;
-  color: #155724;
-}
-
-.error {
-  background-color: #f8d7da;
-  color: #721c24;
-}
-
-/* --- Grid de bahías --- */
-.grid {
-  display: grid;
-  gap: 8px;
-  justify-content: center;
-  margin-top: 30px;
-  margin-bottom: 20px;
-  grid-template-columns: repeat(5, 80px);
-  grid-template-rows: repeat(3, 110px);
-}
-
-.bahia {
-  width: 80px;
-  height: 110px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  color: white;
-  font-weight: bold;
-  box-shadow: 0px 3px 6px rgba(0,0,0,0.2);
-  cursor: pointer;
-  font-size: 14px;
-  text-align: center;
-  transition: transform 0.1s, background-color 0.3s;
-}
-
-.bahia:hover {
-  transform: scale(1.05);
-}
-
-.libre {
-  background-color: #28a745;
-}
-
-.ocupada {
-  background-color: #dc3545;
-  cursor: not-allowed;
-}
-
-.flash-pop {
-  animation: flashPopAnim 0.6s;
-}
-
-@keyframes flashPopAnim {
-  0% { background-color:#28a745; transform:scale(1); }
-  30% { background-color:#ffc107; transform:scale(1.2); }
-  60% { background-color:#28a745; transform:scale(1.1); }
-  100% { background-color:#28a745; transform:scale(1); }
-}
-
-.nombre-bahia {
-  font-size: 14px;
-}
-
-.nombre-instalador {
-  font-size: 16px;
-  margin-top: 4px;
-  font-weight: bold;
-}
-
-/* --- Responsivo --- */
-@media (max-width: 800px) {
-  .grid {
-    grid-template-columns: repeat(4, 90px);
-    grid-template-rows: auto;
-  }
-
-  .bahia {
-    width: 90px;
-    height: 90px;
-  }
-
-  .brand-container {
-    font-size: 1.3rem;
-    gap: 8px;
-  }
-
-  .brand-container h2 {
-    font-size: 1.4rem;
-  }
-}
-
-@media (max-width: 600px) {
-  .grid {
-    grid-template-columns: repeat(3, 80px);
-  }
-
-  .bahia {
-    width: 80px;
-    height: 80px;
-    font-size: 12px;
-  }
-
-  .brand-container {
-    font-size: 1.2rem;
-  }
-
-  .brand-container h2 {
-    font-size: 1.3rem;
-  }
-}
-
-@media (max-width: 400px) {
-  .grid {
-    grid-template-columns: repeat(2, 70px);
-  }
-
-  .bahia {
-    width: 70px;
-    height: 70px;
-    font-size: 11px;
-  }
-
-  .brand-container {
-    font-size: 1.1rem;
-    gap: 5px;
-    margin: 10px;
-  }
-
-  .brand-container h2 {
-    font-size: 1.2rem;
-  }
-
-  .brand-container .brand,
-  .brand-container .opcion {
-    font-size: 1rem;
-  }
-
-  body {
-    margin: 10px;
-  }
-
-  #instalador {
-    font-size: 14px;
-    padding: 8px 10px;
-  }
-}
-</style>
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      background: #EB0A1E;
+      border-radius: 3px;
+      transition: width 0.05s linear;
+    }
+  </style>
 </head>
 <body>
 
-<!-- Brand -->
-<div class="brand-container">
-  <div class="brand">
-    <span class="toyota">PPO</span> <small>Baja California</small>
+  <div class="brand-container" id="brandContainer">
+    <div class="brand">
+      <span class="toyota">PPO</span>
+      <span class="location">Baja California</span>
+    </div>
+    <div class="opcion">| Post Production Option</div>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
   </div>
-  <div class="titulo"><h2>Reserva de Bahías</h2></div>
-  <div class="opcion">| Post Production Option</div>
-</div>
 
-<!-- Campo para instalador -->
-<div style="margin-bottom: 0px;">
-  <input id="instalador" type="text" placeholder="Ingresa tu No. de instalador">
-</div>
+  <script>
+    const formUrl = "https://forms.office.com/Pages/ResponsePage.aspx?id=HS1kjAnXsEerEAgK8QeY--uM_KDM0uhFtfRaAnmZzAtUNFk5NFVVTFAwSjRBOFlOWFBaTFFUUzJaRi4u&qrcode=true";
+    const brandContainer = document.getElementById('brandContainer');
+    const progressFill = document.getElementById('progressFill');
 
-<!-- Mensaje flotante -->
-<div id="mensaje"></div>
+    const duration = 1500; // duración total en ms (1.5s)
 
-<!-- Contenedor de bahías -->
-<div id="contenedor" class="grid"></div>
-
-<script>
-function mostrarMensaje(texto, tipo) {
-  const msg = document.getElementById("mensaje");
-  msg.textContent = texto;
-  msg.className = tipo;
-  msg.style.display = "block";
-  setTimeout(() => { msg.style.display = "none"; }, 3000);
-}
-
-function cargarBahias(bahiaReservada) {
-  google.script.run.withSuccessHandler(function(bahias) {
-    const cont = document.getElementById('contenedor');
-    cont.innerHTML = '';
-
-    const filas = 3;
-    const columnas = Math.ceil(bahias.length / filas);
-    const nuevoOrden = [];
-    for (let col = 0; col < columnas; col++) {
-      for (let fila = 0; fila < filas; fila++) {
-        const index = fila + col * filas;
-        if (bahias[index]) nuevoOrden.push(bahias[index]);
+    // Animar barra de carga
+    let start = null;
+    function animateProgress(timestamp) {
+      if (!start) start = timestamp;
+      const elapsed = timestamp - start;
+      const progress = Math.min((elapsed / duration) * 100, 100);
+      progressFill.style.width = progress + '%';
+      if (elapsed < duration) {
+        requestAnimationFrame(animateProgress);
       }
     }
+    requestAnimationFrame(animateProgress);
 
-    nuevoOrden.forEach(b => {
-      const div = document.createElement('div');
-      div.className = 'bahia ' + (b.estado === 'Libre' ? 'libre' : 'ocupada');
+    // Después de 1.5s, iniciar fade-out y abrir formulario
+    setTimeout(() => {
+      brandContainer.classList.add('fade-out');
 
-      const bahiaDiv = document.createElement('div');
-      bahiaDiv.className = 'nombre-bahia';
-      div.appendChild(bahiaDiv);
-      bahiaDiv.textContent = b.nombre;
+      // Abrir formulario después de que el fade-out termine
+      setTimeout(() => {
+        window.location.href = formUrl;
+      }, duration); // fade-out dura 1.5s
+    }, duration); // mostrar branding durante 1.5s
+  
 
-      if (b.estado === 'Ocupada' && b.instalador) {
-        const instDiv = document.createElement('div');
-        instDiv.className = 'nombre-instalador';
-        instDiv.textContent = b.instalador;
-        div.appendChild(instDiv);
-      }
-
-      if (b.estado === 'Libre') {
-        div.onclick = function() {
-          const input = document.getElementById('instalador');
-          const instalador = input.value.trim();
-          if (!instalador) {
-            input.classList.add('error');
-            setTimeout(() => input.classList.remove('error'), 300);
-            mostrarMensaje("Por favor ingresa tu número de instalador", "error");
-            return;
-          }
-
-          google.script.run.withSuccessHandler(function(exito) {
-            input.value = '';
-            if (exito) {
-              mostrarMensaje("Reservaste " + b.nombre, "ok");
-              cargarBahias(b.nombre);
-            } else {
-              mostrarMensaje("Esa bahía ya fue ocupada", "error");
-              cargarBahias();
-            }
-          }).reservarBahia(b.nombre, instalador);
-        };
-      }
-
-      if (bahiaReservada && b.nombre === bahiaReservada) {
-        div.classList.add('flash-pop');
-      }
-
-      cont.appendChild(div);
+    // PWA install prompt
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      window._deferredPrompt = e;
     });
-  }).obtenerBahias();
-}
 
-cargarBahias();
-</script>
+    // Service worker (opcional)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(console.error);
+      });
+    }
+  </script>
 
 </body>
 </html>
