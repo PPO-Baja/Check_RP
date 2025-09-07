@@ -4,13 +4,13 @@ const OFFLINE_URL = "/offline.html";
 
 const ASSETS = [
   "/",
-  "/index.html",
-  "/offline.html",
-  "/manifest.webmanifest",
-  "/icon-192.png",
-  "/icon-512.png",
-  "/assets/icon-192-maskable.png",
-  "/assets/icon-512-maskable.png"
+  "index.html",
+  "offline.html",
+  "manifest.webmanifest",
+  "icon-192.png",
+  "icon-512.png",
+  "assets/icon-192-maskable.png",
+  "assets/icon-512-maskable.png"
 ];
 
 self.addEventListener("install", (event) => {
