@@ -7,8 +7,8 @@ const ASSETS = [
   "/index.html",
   "/offline.html",
   "/manifest.webmanifest",
-  "/assets/icon-192.png",
-  "/assets/icon-512.png",
+  "/icon-192.png",
+  "/icon-512.png",
   "/assets/icon-192-maskable.png",
   "/assets/icon-512-maskable.png"
 ];
